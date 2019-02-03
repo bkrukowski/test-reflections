@@ -16,6 +16,9 @@ namespace PhpHeaderFile\View\Extensions;
 use Twig\Extension\AbstractExtension as BaseExtension;
 use Twig\TwigFilter;
 
+/**
+ * @internal
+ */
 abstract class AbstractExtension extends BaseExtension
 {
     /**

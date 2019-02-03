@@ -19,6 +19,9 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Loader\FilesystemLoader;
 
+/**
+ * @internal
+ */
 final class TwigFactory
 {
     private const TWIG_CONFIG = [

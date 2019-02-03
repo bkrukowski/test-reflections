@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace PhpHeaderFile\View\Extensions;
 
+/**
+ * @internal
+ */
 final class SplExtension extends AbstractExtension
 {
     protected function getFilterMapping(): array

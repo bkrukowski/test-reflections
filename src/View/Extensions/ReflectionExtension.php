@@ -15,6 +15,9 @@ namespace PhpHeaderFile\View\Extensions;
 
 use PhpHeaderFile\Reflections\Aliases;
 
+/**
+ * @internal
+ */
 final class ReflectionExtension extends AbstractExtension
 {
     protected function getFilterMapping(): array
