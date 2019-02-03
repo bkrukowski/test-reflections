@@ -204,11 +204,23 @@ namespace PhpHeaderFile\Fixtures\ReflectionExtension
     {
     }
 
+    interface SomethingElseInterface extends SomethingInterface
+    {
+    }
+
+    interface DecoratedSomethingElseInterface extends SomethingElseInterface
+    {
+    }
+
     abstract class Base implements SomethingInterface
     {
     }
 
     class Something extends Base
+    {
+    }
+
+    class SomethingElse implements SomethingElseInterface
     {
     }
 }

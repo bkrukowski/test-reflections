@@ -15,7 +15,10 @@ namespace PhpHeaderFile\View\Extensions;
 
 use PhpHeaderFile\Fixtures\GeneralClasses\ClassWithAlias;
 use PhpHeaderFile\Fixtures\ReflectionExtension\Base;
+use PhpHeaderFile\Fixtures\ReflectionExtension\DecoratedSomethingElseInterface;
 use PhpHeaderFile\Fixtures\ReflectionExtension\Something;
+use PhpHeaderFile\Fixtures\ReflectionExtension\SomethingElse;
+use PhpHeaderFile\Fixtures\ReflectionExtension\SomethingElseInterface;
 use PhpHeaderFile\Fixtures\ReflectionExtension\SomethingInterface;
 
 /**
@@ -77,12 +80,12 @@ final class ReflectionExtensionTest extends BaseTest
     /**
      * @dataProvider providerGetInterfacesNames
      *
-     * @param \ReflectionClass $class
-     * @param string[]         $expected
+     * @param string   $class
+     * @param string[] $expected
      */
-    public function testGetInterfacesNames(\ReflectionClass $class, array $expected)
+    public function testGetInterfacesNames(string $class, array $expected)
     {
-        $result = $this->callMethod('getInterfacesNames', $class);
+        $result = $this->callMethod('getInterfacesNames', new \ReflectionClass($class));
         \sort($result);
         \sort($expected);
         $this->assertSame($expected, $result);
@@ -91,8 +94,10 @@ final class ReflectionExtensionTest extends BaseTest
     public function providerGetInterfacesNames(): iterable
     {
         return [
-            [new \ReflectionClass(Base::class), [SomethingInterface::class]],
-            [new \ReflectionClass(Something::class), []],
+            [Base::class, [SomethingInterface::class]],
+            [Something::class, []],
+            [SomethingElse::class, [SomethingElseInterface::class]],
+            [DecoratedSomethingElseInterface::class, [SomethingElseInterface::class]],
         ];
     }
 

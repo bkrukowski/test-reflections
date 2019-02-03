@@ -63,7 +63,7 @@ final class ReflectionExtension extends AbstractExtension
         foreach ($result as $interface => $reflection) {
             foreach ($result as $potentialParent => $parentReflection) {
                 if ($reflection->isSubclassOf($potentialParent)) {
-                    unset($result[$interface]);
+                    unset($result[$potentialParent]);
 
                     break;
                 }
