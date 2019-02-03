@@ -79,11 +79,11 @@ final class SplExtensionTest extends BaseTest
     public function providerEscapeType(): iterable
     {
         return [
-            ['\\'.static::class, static::class],
-            [static::class, static::class],
+            ['\\'.static::class, '\\'.static::class],
+            [static::class, '\\'.static::class],
             ['bool', 'bool'],
-            ['\\'.ExporterInterface::class, ExporterInterface::class],
-            [ExporterInterface::class, ExporterInterface::class],
+            ['\\'.ExporterInterface::class, '\\'.ExporterInterface::class],
+            [ExporterInterface::class, '\\'.ExporterInterface::class],
         ];
     }
 
