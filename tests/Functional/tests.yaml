@@ -1,0 +1,23 @@
+abstract_classes:
+    patterns: ['PhpHeaderFile\Fixtures\AbstractClass', 'PhpHeaderFile\Fixtures\ChildAbstractClass']
+    result: abstract_classes.txt
+
+final_class:
+    patterns: ['PhpHeaderFile\Fixtures\FinalClass']
+    result: final_class.txt
+
+iterable_class:
+    patterns: ['PhpHeaderFile\Fixtures\IterableInterface', 'PhpHeaderFile\Fixtures\Iterables\*', 'PhpHeaderFile\Fixtures\Stringable\*']
+    result: iterable_classes.txt
+
+math:
+    patterns: ['PhpHeaderFile\Fixtures\Math\*']
+    result: math.txt
+
+general_classes:
+    patterns: ['PhpHeaderFile\Fixtures\GeneralClasses\*']
+    result: general_classes.txt
+
+spl:
+    patterns: ['fn-class_implements', 'class-Countable', 'const-PHP_EOL']
+    result: spl.txt

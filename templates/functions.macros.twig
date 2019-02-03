@@ -1,0 +1,53 @@
+{%- macro exportFunctionParams(parameters) -%}
+    {#- parameters \ReflectionParameter[] -#}
+    {%- for param in parameters -%}
+        {#- param \ReflectionParameter -#}
+        {{- param.type ? (param.allowsNull ? '?') ~ param.type|escapeType ~ ' ' }}{{ param.passedByReference ? '&' -}}
+        ${{ param.name -}}
+        {{- param.defaultValueAvailable ? ' = ' ~ (param.defaultValueConstant ? param.defaultValueConstantName : param.defaultValue|varExport) }}
+        {{- not loop.last ? ', ' -}}
+    {% endfor %}
+{%- endmacro -%}
+
+{%- macro exportFunctionWithoutNamespace(function, class) -%}
+    {%- import _self as functionsMacros -%}
+    {#- function \ReflectionFunctionAbstract -#}
+    {#- class \ReflectionClass -#}
+
+    {{- class ? function.modifiers|modifierNames|except(class.interface ? ['abstract'] : [])|join(' ') -}}
+    {{- class ? ' ' -}} function {{ function.shortName -}}
+    ({{ functionsMacros.exportFunctionParams(function.parameters) }})
+    {{- function.returnType ? ': ' ~ (function.returnType.allowsNull ? '?') ~ function.returnType|escapeType -}}
+    {%- if class and function.abstract -%}
+        ;
+    {%- elseif class and function.name == '__toString' -%}
+        {{- ' ' -}} {return '';}
+    {%- else -%}
+        {{- ' {}' -}}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro exportFunctions(functions) -%}
+    {%- import _self as functionsMacros -%}
+
+    {%- set previousNamespace = '' -%}
+    {# functions \ReflectionFunction[] #}
+    {%- for function in functions -%}
+        {%- if previousNamespace != function.namespaceName and not loop.first -%}
+            {{- '\n}' -}}
+        {%- endif -%}
+
+        {%- if loop.first or previousNamespace != function.namespaceName -%}
+            {{- not loop.first ? '\n\n' -}}
+            namespace {{- function.inNamespace ? ' ' ~ function.namespaceName ~ ' ' -}} {{- '\n' -}} {
+        {%- endif -%}
+
+        {{- '\n    ' -}} {{- functionsMacros.exportFunctionWithoutNamespace(function, false) -}}
+
+        {%- if loop.last -%}
+            {{ '\n}' }}
+        {%- endif -%}
+
+        {%- set previousNamespace = function.namespaceName -%}
+    {%- endfor -%}
+{%- endmacro -%}

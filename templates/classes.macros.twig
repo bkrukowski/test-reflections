@@ -1,0 +1,130 @@
+{%- macro classModifiers(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- if not (class.interface or class.trait) -%}
+        {%- if class.final -%}
+            final{{ ' ' -}}
+        {%- elseif class.abstract -%}
+            abstract{{ ' ' -}}
+        {%- endif -%}
+    {%- endif -%}
+{% endmacro %}
+
+{%- macro structureType(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- if class.interface -%}
+        interface
+    {%- elseif class.trait -%}
+        trait
+    {%- else -%}
+        class
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro classConstants(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- for const in class.reflectionConstants|declaredIn(class.name) -%}
+        {{ '\n        ' }}{{ const.modifiers|modifierNames|join(' ') }} const {{ const.name }} = {{ const.value|varExport }};
+    {%- endfor -%}
+{%- endmacro -%}
+
+{%- macro classTraits(class) -%}
+    {#- class \ReflectionClass -#}
+    {%- if class.traitNames -%}
+        {%- for name in class.traitNames -%}
+            {{- '\n        /* use ' ~ name|escapeType ~ '; */' -}}
+        {%- endfor -%}
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro classProperties(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- for property in class.properties|declaredIn(class.name) -%}
+        {{- '\n        ' -}}
+        {{- property.modifiers|modifierNames|except(['abstract'])|join(' ') }} ${{ property.name -}};
+    {%- endfor -%}
+{%- endmacro -%}
+
+{%- macro classMethods(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- import 'functions.macros.twig' as functionsMacros -%}
+
+    {%- for method in class.methods|declaredIn(class.name) -%}
+        {{- '\n        ' -}}
+        {{- functionsMacros.exportFunctionWithoutNamespace(method, class) -}}
+    {%- endfor -%}
+{%- endmacro -%}
+
+{%- macro classAliases(class) -%}
+    {#- class \ReflectionClass -#}
+
+    {%- for alias in class.name|keywordAliases -%}
+        {{- '\n    ' -}}
+        class_alias('{{ class.name }}', '{{ alias }}', true);
+    {%- endfor -%}
+{%- endmacro -%}
+
+{%- macro _exportClassWithoutNamespace(class) -%}
+    {%- import _self as self -%}
+    {#- class \ReflectionClass -#}
+
+    {{- '    ' }}{{ self.classModifiers(class) -}}
+    {{- self.structureType(class) }} {{ class.shortName -}}
+    {{- class.parentClass ? ' extends \\' ~ class.parentClass.name -}}
+    {{- class|getInterfacesNames|length > 0 ? ' ' ~ (class.interface ? 'extends' : 'implements') ~ ' \\' ~ class|getInterfacesNames|join(', \\') -}}
+    {{- '\n    {' -}}
+
+    {%- set hasConstants = class.reflectionConstants|declaredIn(class.name)|length > 0 -%}
+    {%- set hasTraits = class.traitNames|length > 0 -%}
+    {%- set hasProperties = class.properties|declaredIn(class.name)|length > 0 -%}
+    {%- set hasMethods = class.methods|declaredIn(class.name)|length > 0 -%}
+
+    {{- self.classTraits(class) -}}
+
+    {%- if hasTraits and hasConstants -%}
+        {{- '\n' -}}
+    {%- endif -%}
+    {{- self.classConstants(class) -}}
+
+    {%- if (hasConstants or hasTraits) and hasProperties -%}
+        {{- '\n' -}}
+    {%- endif -%}
+    {{- self.classProperties(class) -}}
+
+    {%- if (hasConstants or hasTraits or hasProperties) and hasMethods -%}
+        {{- '\n' -}}
+    {%- endif -%}
+    {{- self.classMethods(class) -}}
+
+    {{- '\n    }' -}}
+
+    {{- self.classAliases(class)  -}}{{- '\n' -}}
+{%- endmacro -%}
+
+{%- macro exportClasses(classes) -%}
+    {%- import _self as self -%}
+    {%- set previousNamespace = '' -%}
+    {#- classes \ReflectionClass[] -#}
+    {%- for class in classes -%}
+        {%- if previousNamespace != class.namespaceName and not loop.first -%}
+            }
+        {%- endif -%}
+
+        {%- if loop.first or previousNamespace != class.namespaceName -%}
+            {{- not loop.first ? '\n\n' -}}
+            namespace {{- class.inNamespace ? ' ' ~ class.namespaceName -}} {{- '\n' -}} {
+        {%- endif -%}
+
+        {{- '\n' -}}{{- self._exportClassWithoutNamespace(class) -}}
+
+        {%- if loop.last -%}
+            }
+        {%- endif -%}
+
+        {%- set previousNamespace = class.namespaceName -%}
+    {%- endfor -%}
+{%- endmacro -%}

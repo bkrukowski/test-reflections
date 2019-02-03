@@ -1,0 +1,36 @@
+{
+    "name": "php-header-file/php-header-file",
+    "description": "Exports definitions of internal classes",
+    "authors": [
+        {
+            "name": "Bartłomiej Krukowski",
+            "email": "bartlomiej@krukowski.me"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "ext-mbstring": "*",
+        "symfony/console": "^4.2",
+        "twig/twig": "^2.4",
+        "symfony/filesystem": "^4.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.5",
+        "symfony/yaml": "^4.2"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "PhpHeaderFile\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpHeaderFile\\": "tests/"
+        },
+        "files": ["fixtures/fixture.php"]
+    },
+    "bin": [
+        "php-header-file"
+    ]
+}

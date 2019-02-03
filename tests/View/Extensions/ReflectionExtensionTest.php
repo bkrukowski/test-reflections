@@ -1,0 +1,88 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the php-header-file/php-header-file package.
+ *
+ * (c) Bartłomiej Krukowski <bartlomiej@krukowski.me>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace PhpHeaderFile\View\Extensions;
+
+use PhpHeaderFile\Fixtures\GeneralClasses\ClassWithAlias;
+
+/**
+ * @covers \PhpHeaderFile\View\Extensions\AbstractExtension
+ * @covers \PhpHeaderFile\View\Extensions\ReflectionExtension
+ *
+ * @internal
+ */
+final class ReflectionExtensionTest extends BaseTest
+{
+    /**
+     * @dataProvider providerModifierNames
+     *
+     * @param int      $modifiers
+     * @param string[] $expected
+     */
+    public function testModifierNames(int $modifiers, array $expected): void
+    {
+        $names = $this->callMethod('modifierNames', $modifiers);
+        \sort($names);
+        \sort($expected);
+
+        $this->assertSame($expected, $names);
+    }
+
+    public function providerModifierNames(): iterable
+    {
+        return [
+            [0, ['public']],
+            [\ReflectionProperty::IS_PUBLIC, ['public']],
+            [\ReflectionProperty::IS_PRIVATE, ['private']],
+            [\ReflectionMethod::IS_PUBLIC, ['public']],
+            [\ReflectionMethod::IS_FINAL | \ReflectionMethod::IS_STATIC, ['final', 'static']],
+        ];
+    }
+
+    /**
+     * @dataProvider providerKeywordAliases
+     *
+     * @param string $className
+     * @param array  $expected
+     */
+    public function testKeywordAliases(string $className, array $expected): void
+    {
+        $aliases = $this->callMethod('keywordAliases', $className);
+        \sort($aliases);
+        \sort($expected);
+        $this->assertSame($expected, $aliases);
+    }
+
+    public function providerKeywordAliases(): iterable
+    {
+        return [
+            [ClassWithAlias::class, ['phpheaderfile\fixtures\generalclasses\class_with_alias']],
+            [static::class, []],
+        ];
+    }
+
+    protected function getExpectedFilters(): array
+    {
+        return [
+            'modifierNames',
+            'keywordAliases',
+            'getInterfacesNames',
+            'declaredIn',
+        ];
+    }
+
+    protected function createExtension(): AbstractExtension
+    {
+        return new ReflectionExtension();
+    }
+}

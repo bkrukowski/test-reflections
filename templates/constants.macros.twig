@@ -1,0 +1,21 @@
+{%- macro exportConsts(consts) -%}
+    {%- set previousNamespace = '' -%}
+    {%- for const in consts -%}
+        {%- if previousNamespace != const[0] and not loop.first -%}
+            {{ '\n}' }}
+        {%- endif -%}
+
+        {%- if loop.first or previousNamespace != const[0] -%}
+            {{- not loop.first ? '\n\n' -}}
+            namespace {{- '' != const[0] ? ' ' ~ const[0] -}} {{- '\n' -}} {
+        {%- endif -%}
+
+        {{- '\n    ' -}} const {{ const[1] }} = {{ constant(const[0] ~ '\\' ~ const[1])|varExport }};
+
+        {%- if loop.last -%}
+            {{ '\n' ~ '}' }}
+        {%- endif -%}
+
+        {%- set previousNamespace = const[0] -%}
+    {%- endfor -%}
+{%- endmacro -%}
