@@ -27,7 +27,7 @@ before_script:
   - if [[ "$DEPENDENCIES" = 'low' ]]; then export PHP_ARGS=$(php -r "echo '-d error_reporting=', E_ALL ^ (E_DEPRECATED | E_USER_DEPRECATED);"); else export PHP_ARGS=''; fi
 
 script:
-  - php ${PHP_ARGS} vendor/bin/phpunit
+  - php ${PHP_ARGS} vendor/bin/phpunit --exclude-group functional
 
 after_script:
-  - venodr/bin/php-coveralls --exclude-group functional
+  - venodr/bin/php-coveralls
