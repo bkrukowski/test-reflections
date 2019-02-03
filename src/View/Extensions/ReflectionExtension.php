@@ -92,7 +92,7 @@ final class ReflectionExtension extends AbstractExtension
             }
         }
 
-        $visibilityComparator = function ($a, $b): int {
+        $visibilityComparator = function (\Reflector $a, \Reflector $b): int {
             /** @var \ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $a */
             /** @var \ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty $b */
             $left = $a->isPublic() ? -1 : ($a->isProtected() ? 0 : 1);

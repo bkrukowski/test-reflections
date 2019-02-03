@@ -214,10 +214,16 @@ namespace PhpHeaderFile\Fixtures\ReflectionExtension
 
     abstract class Base implements SomethingInterface
     {
+        public function doBase()
+        {
+        }
     }
 
     class Something extends Base
     {
+        public function doSomething()
+        {
+        }
     }
 
     class SomethingElse implements SomethingElseInterface

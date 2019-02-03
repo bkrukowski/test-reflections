@@ -101,6 +101,35 @@ final class ReflectionExtensionTest extends BaseTest
         ];
     }
 
+    /**
+     * @dataProvider providerDeclaredIn
+     *
+     * @param \ReflectionClassConstant|\ReflectionMethod|\ReflectionProperty[] $reflections
+     * @param string                                                           $class
+     * @param array                                                            $names
+     */
+    public function testDeclaredIn(array $reflections, string $class, array $names)
+    {
+        $result = \array_map(
+            function (\Reflector $reflector) {
+                return $reflector->getName();
+            },
+            $this->callMethod('declaredIn', $reflections, $class)
+        );
+
+        $this->assertSame($names, $result);
+    }
+
+    public function providerDeclaredIn(): iterable
+    {
+        $doBase = new \ReflectionMethod(Something::class, 'doBase');
+        $doSth = new \ReflectionMethod(Something::class, 'doSomething');
+
+        return [
+            [[$doBase, $doSth], Something::class, ['doSomething']],
+        ];
+    }
+
     protected function getExpectedFilters(): array
     {
         return [
