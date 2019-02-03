@@ -30,4 +30,4 @@ script:
   - php ${PHP_ARGS} vendor/bin/phpunit --exclude-group functional
 
 after_script:
-  - venodr/bin/php-coveralls
+  - vendor/bin/php-coveralls
