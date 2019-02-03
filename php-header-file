@@ -14,6 +14,20 @@ declare(strict_types=1);
 
 use PhpHeaderFile\ApplicationFactory;
 
-require __DIR__ . '/vendor/autoload.php';
+$autoloaderExists = false;
+foreach (['/../../autoload.php', '/../vendor/autoload.php', '/vendor/autoload.php'] as $path) {
+    $file = __DIR__.$path;
+    if (\file_exists($file)) {
+        require $file;
+        $autoloaderExists = true;
+
+        break;
+    }
+}
+
+if (!$autoloaderExists) {
+    \fwrite(\STDERR, "File 'vendor/autoload.php' not found\n");
+    exit(1);
+}
 
 (new ApplicationFactory())->createApp()->run();
