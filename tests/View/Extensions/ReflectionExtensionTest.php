@@ -14,6 +14,9 @@ declare(strict_types=1);
 namespace PhpHeaderFile\View\Extensions;
 
 use PhpHeaderFile\Fixtures\GeneralClasses\ClassWithAlias;
+use PhpHeaderFile\Fixtures\ReflectionExtension\Base;
+use PhpHeaderFile\Fixtures\ReflectionExtension\Something;
+use PhpHeaderFile\Fixtures\ReflectionExtension\SomethingInterface;
 
 /**
  * @covers \PhpHeaderFile\View\Extensions\AbstractExtension
@@ -68,6 +71,28 @@ final class ReflectionExtensionTest extends BaseTest
         return [
             [ClassWithAlias::class, ['phpheaderfile\fixtures\generalclasses\class_with_alias']],
             [static::class, []],
+        ];
+    }
+
+    /**
+     * @dataProvider providerGetInterfacesNames
+     *
+     * @param \ReflectionClass $class
+     * @param string[]         $expected
+     */
+    public function testGetInterfacesNames(\ReflectionClass $class, array $expected)
+    {
+        $result = $this->callMethod('getInterfacesNames', $class);
+        \sort($result);
+        \sort($expected);
+        $this->assertSame($expected, $result);
+    }
+
+    public function providerGetInterfacesNames(): iterable
+    {
+        return [
+            [new \ReflectionClass(Base::class), [SomethingInterface::class]],
+            [new \ReflectionClass(Something::class), []],
         ];
     }
 

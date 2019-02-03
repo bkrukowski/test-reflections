@@ -197,3 +197,18 @@ namespace PhpHeaderFile\Fixtures\GeneralClasses
         }
     }
 }
+
+namespace PhpHeaderFile\Fixtures\ReflectionExtension
+{
+    interface SomethingInterface
+    {
+    }
+
+    abstract class Base implements SomethingInterface
+    {
+    }
+
+    class Something extends Base
+    {
+    }
+}
