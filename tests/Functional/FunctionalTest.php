@@ -28,7 +28,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class FunctionalTest extends BaseTest
 {
-    public function testExportExtesions(): void
+    public function testExportExtensions(): void
     {
         $this->requireXdebug();
 
