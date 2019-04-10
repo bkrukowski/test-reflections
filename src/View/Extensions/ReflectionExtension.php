@@ -49,7 +49,7 @@ final class ReflectionExtension extends AbstractExtension
         $parentClassesInterfaces = [];
         $parent = $class;
         while (false !== $parent = $parent->getParentClass()) {
-            $parentClassesInterfaces = \array_merge($parent->getInterfaceNames());
+            $parentClassesInterfaces = \array_merge($parentClassesInterfaces, $parent->getInterfaceNames());
         }
 
         /** @var \ReflectionClass[] $result */
