@@ -61,10 +61,6 @@ final class FunctionalTest extends BaseTest
      */
     public function testExport(array $patterns, string $expected): void
     {
-        if ($this->getDecoratedExporter($patterns)->export() !== $expected) {
-            echo $this->getDecoratedExporter($patterns)->export();
-            exit;
-        }
         $this->assertSame(
             $expected,
             $this->getDecoratedExporter($patterns)->export()
