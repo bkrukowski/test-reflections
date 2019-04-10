@@ -2,7 +2,11 @@
 
 Generate header file of extensions for your IDE.
 
-## Usage
+## Why?
+
+For supporting syntax autocomplete of your IDE by custom extensions like `swoole` or `uopz`.
+
+## Example
 
 `./php-header-file export ext-pdo`
 
@@ -34,4 +38,28 @@ namespace
 (...)
 }
 (...)
+```
+
+## Help
+
+```
+Description:
+  Exports definitions of functions/classes/constants/extensions
+
+Usage:
+  export [options] [--] <patterns>...
+
+Arguments:
+  patterns               Things to be exported e.g. "ext-pdo", available prefixes: fn-, class-, ext-, const-
+
+Options:
+  -o, --output[=OUTPUT]  Name of file where php code will be written [default: "headers.php"]
+  -f, --force            Overwrite if file exists
+  -h, --help             Display this help message
+  -q, --quiet            Do not output any message
+  -V, --version          Display this application version
+      --ansi             Force ANSI output
+      --no-ansi          Disable ANSI output
+  -n, --no-interaction   Do not ask any interactive question
+  -v|vv|vvv, --verbose   Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
 ```
