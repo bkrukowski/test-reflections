@@ -18,7 +18,6 @@ use PhpHeaderFile\Exporters\CodeExporter;
 use PhpHeaderFile\Exporters\CodeExporterDecorator;
 use PhpHeaderFile\Pattern\PatternCompiler;
 use PhpHeaderFile\View\TwigFactory;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * @group functional
@@ -69,7 +68,34 @@ final class FunctionalTest extends BaseTest
 
     public function providerExport(): iterable
     {
-        foreach (Yaml::parse(\file_get_contents(__DIR__.\DIRECTORY_SEPARATOR.'tests.yaml')) as $key => $data) {
+        $tests = [
+            'abstract_classes' => [
+                'patterns' => ['PhpHeaderFile\Fixtures\AbstractClass', 'PhpHeaderFile\Fixtures\ChildAbstractClass'],
+                'result' => 'abstract_classes.txt',
+            ],
+            'final_class' => [
+                'patterns' => ['PhpHeaderFile\Fixtures\FinalClass'],
+                'result' => 'final_class.txt',
+            ],
+            'iterable_class' => [
+                'patterns' => ['PhpHeaderFile\Fixtures\IterableInterface', 'PhpHeaderFile\Fixtures\Iterables\*', 'PhpHeaderFile\Fixtures\Stringable\*'],
+                'result' => 'iterable_class.txt',
+            ],
+            'math' => [
+                'patterns' => ['PhpHeaderFile\Fixtures\Math\*'],
+                'result' => 'math.txt',
+            ],
+            'general_classes' => [
+                'patterns' => ['PhpHeaderFile\Fixtures\GeneralClasses\*'],
+                'result' => 'general_classes.txt',
+            ],
+            'spl' => [
+                'patterns' => ['fn-class_implements', 'class-Countable', 'const-PHP_EOL'],
+                'result' => 'abstract_classes.txt',
+            ],
+        ];
+
+        foreach ($tests as $key => $data) {
             yield $key => [
                 $data['patterns'],
                 \file_get_contents(\implode(\DIRECTORY_SEPARATOR, [__DIR__, 'tests', $data['result']])),
