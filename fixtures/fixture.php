@@ -115,7 +115,7 @@ namespace PhpHeaderFile\Fixtures\GeneralClasses
 {
     class ClassWithoutModifierNames
     {
-        public function hello()
+        public function hello(string $name = 'UNKNOWN')
         {
         }
     }
